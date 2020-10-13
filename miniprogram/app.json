@@ -14,7 +14,8 @@
     "pages/im/im",
     "pages/im/room/room",
     "pages/home/home",
-    "pages/editor/editor"
+    "pages/editor/editor",
+    "pages/detail/detail"
   ],
   "entryPagePath": "pages/home/home",
   "window": {
