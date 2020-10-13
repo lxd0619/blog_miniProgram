@@ -1,0 +1,4 @@
+<view>
+  <wemark md="{{md}}" link highlight type="wemark"></wemark>
+  <towxml nodes="{{article}}" />
+</view>

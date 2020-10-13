@@ -1,0 +1,80 @@
+<scroll-view scroll-y class="DrawerPage {{modalName=='viewModal'?'show':''}}">
+  <cu-custom bgColor="bg-gradual-blue" isBack="{{true}}">
+    <view slot="backText">返回</view>
+    <view slot="content">全屏抽屉</view>
+  </cu-custom>
+  <view class='padding margin'>
+    <view class='cu-btn round bg-green shadow' bindtap="showModal" data-target="viewModal">
+      打开抽屉
+    </view>
+  </view>
+  <!-- 轮播图 -->
+  <swiper class="card-swiper" circular="true" autoplay="true" interval="5000" duration="500">
+    <swiper-item wx:for="{{swiperList}}" wx:key="index" class="{{cardCur==index?'cur':''}}">
+      <view class="swiper-item">
+        <image src="{{item.url}}" mode="aspectFill" wx:if="{{item.type=='image'}}"></image>
+        <video src="{{item.url}}" autoplay loop muted show-play-btn="{{false}}" controls="{{false}}" objectFit="cover"
+          wx:if="{{item.type=='video'}}"></video>
+      </view>
+    </swiper-item>
+  </swiper>
+  <!-- 列表 -->
+  <view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg">
+    <view class="cu-item arrow" wx:for="{{queryResult}}" wx:key="index">
+      <view class="content">
+        <text class="text-grey">{{item.title}}</text>
+      </view>
+    </view>
+  </view>
+</scroll-view>
+<!-- 关闭抽屉 -->
+<view class="DrawerClose {{modalName=='viewModal'?'show':''}}" bindtap="hideModal">
+  <text class="cuIcon-pullright"></text>
+</view>
+<view>
+  <scroll-view scroll-y class="DrawerWindow {{modalName=='viewModal'?'show':''}}">
+    <view class="cu-list menu card-menu margin-top-xl margin-bottom-xl padding-bottom" style="margin-top:100rpx;">
+      <view class="cu-list menu sm-border card-menu margin-top"
+        style="box-shadow: 4rpx 8rpx 26rpx rgba(0, 0, 0, 0.300);">
+        <!-- 头像 微信授权 -->
+        <view class="cu-item" style='min-height: 200rpx;'>
+          <view wx:if="{{!hasUserInfo && canIUse}}" class="content grid col-1">
+            <view class="padding-sm text-sm flex justify-center">
+              <text class="text-grey">允许微信授权后，可体验更多功能</text>
+            </view>
+            <view class="padding-sm flex justify-center">
+              <button open-type="getUserInfo" bindgetuserinfo="getUserInfo" class='cu-btn round bg-green shadow'>
+                微信授权
+              </button>
+            </view>
+          </view>
+          <block wx:else>
+            <view class="content flex justify-center align-center">
+              <view class="flex-sub">
+                <view class="cu-avatar xl round menu-img" style="background-image:url({{userInfo.avatarUrl}});"></view>
+              </view>
+              <view class="flex-twice grid col-1 ">
+                <view class="text-lg margin-xs">
+                  <text class="text-black text-bold">{{userInfo.nickName}}</text>
+                </view>
+                <view class="margin-xs bg-white">
+                  <view class="cu-tag radius">{{Role}}</view>
+                </view>
+              </view>
+            </view>
+          </block>
+        </view>
+        <view class="cu-item arrow" bindtap="goEditor">
+          <text class="text-blue">新建文档</text>
+        </view>
+        <!-- 循环列表 -->
+        <view class="cu-item arrow" wx:for="{{20}}" wx:key="index">
+          <view class="content">
+            <text class="cuIcon-github text-grey"></text>
+            <text class="text-grey">{{index +1}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view>
