@@ -15,8 +15,6 @@ App({
         traceUser: true,
       })
     }
-
     this.globalData = {}
-  },
-  towxml: require('/towxml/index')
+  }
 })

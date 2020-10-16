@@ -1,5 +1,5 @@
 page {
-  background-image: var(--gradualShadow);
+  background-image: var(--white);
   width: 100vw;
   overflow: hidden;
 }
@@ -100,4 +100,9 @@ page {
 
 .DrawerPage .cu-bar.tabbar .action {
   flex: initial;
+}
+
+.carousel-img {
+  height: 100%;
+  width: 100%;
 }

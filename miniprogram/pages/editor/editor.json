@@ -1,6 +1,7 @@
 {
+  "navigationBarTitleText": "发表文章",
+  "disableScroll": true,
   "usingComponents": {
-    "wemark": "/components/wemark/wemark",
-    "towxml": "/towxml/towxml"
+    "m-editor": "/components/m-editor"
   }
 }

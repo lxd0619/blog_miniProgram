@@ -14,7 +14,7 @@ Page({
     avatarUrl: '../index/user-unlogin.png',
     userInfo: {},
     Role: "游客",
-    queryResult:[],
+    queryResult: [],
     swiperList: [{
       id: 0,
       type: 'image',
@@ -60,7 +60,6 @@ Page({
           // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
           wx.getUserInfo({
             success: res => {
-              console.log("userInfo", res)
               this.setData({
                 avatarUrl: res.userInfo.avatarUrl,
                 userInfo: res.userInfo
@@ -83,7 +82,7 @@ Page({
         this.setData({
           queryResult: res.data
         })
-        console.log('[数据库] [查询记录] 成功: ', res)
+        // console.log('[数据库] [查询记录] 成功: ', res)
       },
       fail: err => {
         wx.showToast({
@@ -94,8 +93,13 @@ Page({
       }
     })
   },
+  goDetail: function (data) {
+    // wx.navigateTo({url: '../detail/detail?id=' + data.currentTarget.dataset.id})
+    wx.navigateTo({
+      url: '../editor/editor?id=' + data.currentTarget.dataset.id + "&type=detail"
+    })
+  },
   getUserInfo: function (e) {
-    console.log(e)
     app.globalData.userInfo = e.detail.userInfo
     this.setData({
       userInfo: e.detail.userInfo,

@@ -14,8 +14,7 @@
     "pages/im/im",
     "pages/im/room/room",
     "pages/home/home",
-    "pages/editor/editor",
-    "pages/detail/detail"
+    "pages/editor/editor"
   ],
   "entryPagePath": "pages/home/home",
   "window": {
@@ -23,9 +22,6 @@
     "navigationBarTitleText": "云开发",
     "navigationStyle": "custom",
     "navigationBarTextStyle": "white"
-  },
-  "usingComponents": {
-    "cu-custom": "/colorui/components/cu-custom"
   },
   "sitemapLocation": "sitemap.json",
   "style": "v2"

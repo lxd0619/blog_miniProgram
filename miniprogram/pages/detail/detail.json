@@ -1,6 +1,0 @@
-{
-  "usingComponents": {
-    "wemark": "/components/wemark/wemark",
-    "towxml": "/towxml/towxml"
-  }
-}

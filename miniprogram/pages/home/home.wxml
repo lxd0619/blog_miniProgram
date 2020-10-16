@@ -3,26 +3,49 @@
     <view slot="backText">返回</view>
     <view slot="content">全屏抽屉</view>
   </cu-custom>
-  <view class='padding margin'>
-    <view class='cu-btn round bg-green shadow' bindtap="showModal" data-target="viewModal">
-      打开抽屉
+  <view style="margin-left:60rpx;margin-top:50rpx">
+    <view class='cu-btn round bg-white shadow' bindtap="showModal" data-target="viewModal">
+      <text class="cuIcon-homefill lg text-gray"></text>
     </view>
   </view>
   <!-- 轮播图 -->
   <swiper class="card-swiper" circular="true" autoplay="true" interval="5000" duration="500">
     <swiper-item wx:for="{{swiperList}}" wx:key="index" class="{{cardCur==index?'cur':''}}">
-      <view class="swiper-item">
+      <!-- <view class="swiper-item">
         <image src="{{item.url}}" mode="aspectFill" wx:if="{{item.type=='image'}}"></image>
         <video src="{{item.url}}" autoplay loop muted show-play-btn="{{false}}" controls="{{false}}" objectFit="cover"
           wx:if="{{item.type=='video'}}"></video>
+      </view> -->
+
+      <!-- <navigator url="../post/post?postId={{bannerPost.id}}" open-type="navigate"> -->
+      <view class="swiper-item" style="padding: 20rpx; padding-bottom:26rpx;">
+        <view class="carousel-img radius shadow-meow bg-lightGrey bg-img"
+          style="background-image:url({{item.url}}); width:100%">
+          <view class="bg-maskCard flex-sub" style="border-radius:6rpx; height:100%; position:relative;">
+            <view class="padding-lg text-white">
+              <view class="padding-xs text-xl text-bold text-shadow">
+                <!-- {{bannerPost.title}} -->
+                title
+              </view>
+            </view>
+            <view class="padding-lg text-white" style="position:absolute; bottom:0; right:0;">
+              <view class="padding-xs text-df text-bold text-shadow">
+                <!-- {{bannerPost.createTime}} -->
+                time
+              </view>
+            </view>
+          </view>
+        </view>
       </view>
+      <!-- </navigator> -->
+
     </swiper-item>
   </swiper>
   <!-- 列表 -->
   <view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg">
     <view class="cu-item arrow" wx:for="{{queryResult}}" wx:key="index">
-      <view class="content">
-        <text class="text-grey" bindtap="goDetail(item)">{{item.title}}</text>
+      <view class="content" bindtap="goDetail" data-id="{{item._id}}">
+        <text class="text-grey">{{item.title}}</text>
       </view>
     </view>
   </view>
