@@ -1,6 +1,6 @@
 <!-- 封面图 -->
 <view class="bg-img bg-mask padding-tb-xl" style="background-image: url({{cover}});height: 414rpx;" bindtap="doUpload">
-  <view class="padding-xl text-white">
+  <view class="padding-xl text-white" wx:if="{{!readOnly}}">
     <view class="padding-xs text-xl">
       点击上传封面图
     </view>
@@ -11,18 +11,25 @@
 </view>
 <!-- 标题 -->
 <view class="cu-form-group">
-  <input placeholder="标题..." value="{{title}}" bindinput="fnInput"></input>
+  <input placeholder="标题..." value="{{title}}" bindinput="fnInput" wx:if="{{!readOnly}}"
+    disabled="{{readOnly}}"></input>
+  <view class="text-center text-bold" style="width:100%;" wx:else>{{title}}</view>
 </view>
 <!-- 编辑器 -->
 <view class="container" style="height:{{editorHeight}}px;">
   <editor id="editor" class="ql-container" placeholder="{{placeholder}}" bindstatuschange="onStatusChange"
-    bindready="onEditorReady" show-img-toolbar="true" show-img-size="true" show-img-resize="true">
+    read-only="{{readOnly}}" bindready="onEditorReady" show-img-toolbar="true" show-img-size="true"
+    show-img-resize="true">
   </editor>
 </view>
+<button class="backBtn cu-btn round white shadow" style="width:50rpx;height:50rpx" bindtap="fnBack">
+  <text class="cuIcon-back_android lg text-gray"></text>
+</button>
 <!-- 保存按钮 -->
-<button class="btn cu-btn round white shadow" style="width:150rpx;height:50rpx" bindtap="formSave">保存</button>
+<button class="btn cu-btn round white shadow" style="width:150rpx;height:50rpx" bindtap="formSave"
+  wx:if="{{!readOnly}}">保存</button>
 <!-- 工具栏 -->
-<scroll-view scroll-x class="toolbar nav" scroll-with-animation catchtouchend="format"
+<scroll-view wx:if="{{!readOnly}}" scroll-x class="toolbar nav" scroll-with-animation catchtouchend="format"
   hidden="{{keyboardHeight > 0 ? false : false}}" style="bottom: {{isIOS ? keyboardHeight : 0}}px">
   <i class="cu-item iconfont icon-zitijiacu {{formats.bold ? 'ql-active' : ''}}" data-name="bold"></i>
   <i class="cu-item iconfont icon-zitixieti {{formats.italic ? 'ql-active' : ''}}" data-name="italic"></i>

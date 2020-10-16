@@ -48,6 +48,13 @@
   border-right: none;
 }
 
+.backBtn {
+  position: fixed;
+  bottom: 230rpx;
+  right: 50rpx;
+  text-align: right;
+}
+
 .btn {
   position: fixed;
   bottom: 150rpx;

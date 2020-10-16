@@ -106,3 +106,17 @@ page {
   height: 100%;
   width: 100%;
 }
+
+.upBtn {
+  position: fixed;
+  bottom: 100rpx;
+  right: 50rpx;
+  text-align: center;
+}
+
+.home {
+  position: absolute;
+  top: 60rpx;
+  left: 20rpx;
+  z-index: 1;
+}

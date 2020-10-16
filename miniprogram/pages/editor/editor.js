@@ -5,13 +5,14 @@ const app = getApp()
 Page({
   data: {
     formats: {},
-    readOnly: false,
+    readOnly: true,
     placeholder: '正文...',
     editorHeight: 300,
     keyboardHeight: 0,
     isIOS: false,
     title: "",
-    cover: "https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg"
+    cover: "https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg",
+    type: ""
   },
   readOnlyChange() {
     this.setData({
@@ -20,7 +21,19 @@ Page({
   },
   onLoad(options) {
     this.editorInit()
-    console.log("options", options)
+    console.log("options", options.type)
+    if (options.type == "detail") {
+      this.setData({
+        type: options.type,
+        readOnly: true
+      })
+    } else if (options.type == "edit" || options.type == "add") {
+      this.setData({
+        type: options.type,
+        readOnly: false
+      })
+    }
+
     if (options.id) {
       this.setData({
         id: options.id
@@ -40,7 +53,7 @@ Page({
         this.setData({
           title: res.data[0].title,
           content: res.data[0].content,
-          cover: res.data[0].cover,
+          cover: res.data[0].cover || "https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg",
           time: res.data[0].time
         })
         //富文本回显
@@ -54,7 +67,7 @@ Page({
           }
         })
         //封面图回显
-        wx.cloud.getTempFileURL({
+        res.data[0].cover && wx.cloud.getTempFileURL({
           fileList: [res.data[0].cover],
           success: res => {
             // fileList 是一个有如下结构的对象数组
@@ -83,6 +96,7 @@ Page({
   },
   // 上传图片
   doUpload: function () {
+    if (this.data.readOnly) return
     var that = this
     // 选择图片
     wx.chooseImage({
@@ -106,6 +120,7 @@ Page({
           filePath,
           success: res => {
             console.log('[上传文件] 成功：', res)
+            // this.setData({cover:fileID})
           },
           fail: e => {
             console.error('[上传文件] 失败：', e)
@@ -126,6 +141,14 @@ Page({
   },
   //保存按钮
   formSave() {
+    if (this.data.type == "edit") {
+      this.fnUpdate()
+    } else if (this.data.type == "add") {
+      this.fnAdd()
+    }
+  },
+  //新增
+  fnAdd: function () {
     this.editorCtx.getContents({
       success: (res) => {
         const db = wx.cloud.database()
@@ -160,13 +183,12 @@ Page({
     })
   },
   // 更新
-  onUpdate: function () {
+  fnUpdate: function () {
     const db = wx.cloud.database()
-    const newCount = this.data.count + 1
     db.collection('article').doc(this.data.id).update({
       data: {
         title: this.data.title,
-        content: res.html,
+        content: this.data.content,
         cover: this.data.cover,
         time: new Date()
       },
@@ -175,9 +197,9 @@ Page({
           title: '编辑成功',
         })
         console.log('[数据库] [更新记录] 成功，记录 _id: ', res)
-        // wx.navigateBack({
-        //   delta: 0,
-        // })
+        wx.navigateBack({
+          delta: 0,
+        })
       },
       fail: err => {
         icon: 'none',
@@ -189,6 +211,12 @@ Page({
   fnInput: function (e) {
     this.setData({
       title: e.detail.value
+    })
+  },
+  //回退
+  fnBack: function () {
+    wx.navigateBack({
+      delta: 0,
     })
   },
   //编辑器初始化

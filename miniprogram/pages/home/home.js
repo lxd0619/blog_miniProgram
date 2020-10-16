@@ -1,6 +1,7 @@
 //index.js
 //获取应用实例
 const app = getApp()
+const util = require('../../utils/util.js')
 
 Page({
   data: {
@@ -44,6 +45,9 @@ Page({
       type: 'image',
       url: 'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg'
     }],
+    cover: "",
+    id: "",
+    keyWord: ""
   },
   onLoad: function () {
     if (!wx.cloud) {
@@ -52,7 +56,6 @@ Page({
       })
       return
     }
-
     // 获取用户信息
     wx.getSetting({
       success: res => {
@@ -70,17 +73,38 @@ Page({
         }
       }
     })
-
+  },
+  onShow: function () {
     this.onQuery()
   },
+  fnKeyWord: function (e) {
+    this.setData({
+      keyWord: e.detail.value
+    })
+  },
+  //查询列表
   onQuery: function () {
     const db = wx.cloud.database()
     db.collection('article').where({
-      _openid: this.data.openid
+      _openid: this.data.openid,
+      title: db.RegExp({
+        regexp: this.data.keyWord,
+        options: 's'
+      })
     }).get({
       success: res => {
+        let queryList = []
+        res.data && res.data.map((item) => {
+          queryList.push({
+            _id: item._id,
+            title: item.title,
+            content: item.content,
+            cover: item.cover || "",
+            time: util.formatTime(new Date(item.time))
+          })
+        })
         this.setData({
-          queryResult: res.data
+          queryResult: queryList
         })
         // console.log('[数据库] [查询记录] 成功: ', res)
       },
@@ -93,10 +117,25 @@ Page({
       }
     })
   },
+  //根据fileID获取图片
+  getPic: function (cover) {
+    cover && wx.cloud.getTempFileURL({
+      fileList: [cover],
+      success: res => {
+        return res.fileList.tempFileURL
+      },
+      fail: console.error
+    })
+  },
   goDetail: function (data) {
     // wx.navigateTo({url: '../detail/detail?id=' + data.currentTarget.dataset.id})
     wx.navigateTo({
       url: '../editor/editor?id=' + data.currentTarget.dataset.id + "&type=detail"
+    })
+  },
+  goEdit: function (data) {
+    wx.navigateTo({
+      url: '../editor/editor?id=' + data.currentTarget.dataset.id + "&type=edit"
     })
   },
   getUserInfo: function (e) {
@@ -108,7 +147,72 @@ Page({
   },
   goEditor() {
     wx.navigateTo({
-      url: '../editor/editor',
+      url: '../editor/editor?type=add',
+    })
+  },
+  delModal(e) {
+    console.log(e.currentTarget)
+    this.setData({
+      modalName: e.currentTarget.dataset.target,
+      id: e.currentTarget.dataset.id
+    })
+  },
+  fnRemove: function () {
+    console.log(this.data)
+    const db = wx.cloud.database()
+    db.collection('article').doc(this.data.id).remove({
+      success: res => {
+        wx.showToast({
+          title: '删除成功',
+        })
+        this.hideModal()
+        this.onQuery()
+      },
+      fail: err => {
+        wx.showToast({
+          icon: 'none',
+          title: '删除失败',
+        })
+        console.error('[数据库] [删除记录] 失败：', err)
+      }
+    })
+  },
+  fnUp: function () {
+    this.setData({
+      top: 0
+    })
+    // wx.pageScrollTo({
+    //   scrollTop: 0,
+    //   duration: 300
+    // })
+  },
+  // ListTouch触摸开始
+  ListTouchStart(e) {
+    this.setData({
+      ListTouchStart: e.touches[0].pageX
+    })
+  },
+
+  // ListTouch计算方向
+  ListTouchMove(e) {
+    this.setData({
+      ListTouchDirection: e.touches[0].pageX - this.data.ListTouchStart > 0 ? 'right' : 'left'
+    })
+  },
+
+  // ListTouch计算滚动
+  ListTouchEnd(e) {
+    if (this.data.ListTouchDirection == 'left') {
+      this.setData({
+        modalName: e.currentTarget.dataset.target
+      })
+    } else {
+      this.setData({
+        modalName: null
+      })
+    }
+    this.setData({
+      ListTouchDirection: null
     })
   },
   showModal(e) {
@@ -122,7 +226,6 @@ Page({
     })
   },
   tabSelect(e) {
-    console.log(e);
     this.setData({
       TabCur: e.currentTarget.dataset.id,
       scrollLeft: (e.currentTarget.dataset.id - 1) * 60

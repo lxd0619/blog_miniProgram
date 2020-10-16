@@ -1,5 +1,0 @@
-page {
-  /* background-image: var(--gradualBlue); */
-  width: 100vw;
-  overflow: hidden;
-}
